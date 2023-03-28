@@ -9,8 +9,18 @@ typedef unsigned int word;
 word __at 0x2007 __CONFIG = (_WDTE_OFF & _WDT_OFF & _MCLRE_OFF);
 
 
+//Definimos la función para generar números aleatorios
 
-//primero voy a definir la main y luego voy a definir el resto de cosas, porque sino me vuelvo loco
+unsigned char random_number_generator(){
+    static unsigned char lfsr = 0x8F; //Se declara la semilla incial para el lfsr
+    unsigned char bit;
+
+    bit = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5)) & 1; // Función XOR que define el siguiente bit del LFSR
+    lfsr = (lfsr >> 1) | (bit << 7); //Se desplaza el registro a la izquierda y se inserta el nuevo bit
+
+    return lfsr % 100 //El número no sobrepasará el rango de 0 a 99 establecido previamente por medio del módulo
+
+}
 
 
 //
