@@ -1,8 +1,15 @@
 #include <pic14/pic12f683.h>
 #include <math.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef unsigned int word;
+
+//Definición de variables globales
+uint8_t used_numbers[100] = {0};
+uint8_t counter = 0;
+
+
 
 
 //Vamos a apagar el WDT y el MCLR
@@ -26,8 +33,11 @@ unsigned char random_number_generator(){
 //
 
 void main(void){
-    TRISIObits.TRISIO0 = 0;
-    TRISIObits.TRISIO1 = 0;
+    //Vamos a configurar los pines del microcontrolador
+    TRISIO = 0b00001000; //Únicamente el pin 3 se toma como entrada
+    ANSEL = 0; //Todas las entradas se dejan como digitales
+    CMCON = 7; //Se apagan los comparadores
+    GPIO = 0x00; //Inicializan todos los pines en 0 
 
 
 
