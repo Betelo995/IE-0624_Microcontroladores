@@ -38,12 +38,12 @@ void main(void){
     unsigned char i = 0;
     unsigned char j;
     unsigned char num;
-    unsigned char tens;
-    unsigned char ones;
+    unsigned char tens = 0;
+    unsigned char ones = 0;
+    
 
     while (1){
         if (BUTTON == 0){
-            while (BUTTON == 0); //Para que programa corra únicamente cuando se suelta el botón
             do {
                 num = random_number_generator();
             } while (num == 100);
@@ -71,16 +71,6 @@ void main(void){
                     tens = num / 10;
                     ones = num % 10;
                 }
-
-                //Poniendo los pines para las decenas
-                set_pins(tens);
-
-                //Delay the tiempo para cambiar al display de las unidades
-                delay(50);
-
-                DISP_NEG = ~DISP_NEG;
-
-                set_pins(ones);
             }
 
             if (i == 16){
@@ -92,16 +82,16 @@ void main(void){
                 i = 0;
 
             }
-            delay(150000);
-            DISP_NEG = ~DISP_NEG;
-            DISP_NEG = ~DISP_NEG;
-            DISP_NEG = ~DISP_NEG;
-            DISP_NEG = ~DISP_NEG;
-
-
-
         }
-        delay(50);
+        //Poniendo los pines para las decenas
+        set_pins(tens);
+
+        //Delay the tiempo para cambiar al display de las unidades
+        delay(10);
+
+        DISP_NEG = ~DISP_NEG;
+
+        set_pins(ones);
     }
 
 }
@@ -136,55 +126,55 @@ void set_pins(unsigned char decimal){
         BCD_2 = 0;
         BCD_3 = 0;
     }
-    if (decimal == 1){
+    else if (decimal == 1){
         BCD_0 = 0;
         BCD_1 = 0;
         BCD_2 = 0;
         BCD_3 = 1;
     }
-    if (decimal == 2){
+    else if (decimal == 2){
         BCD_0 = 0;
         BCD_1 = 0;
         BCD_2 = 1;
         BCD_3 = 0;
     }
-    if (decimal == 3){
+    else if (decimal == 3){
         BCD_0 = 0;
         BCD_1 = 0;
         BCD_2 = 1;
         BCD_3 = 1;
     }
-    if (decimal == 4){
+    else if (decimal == 4){
         BCD_0 = 0;
         BCD_1 = 1;
         BCD_2 = 0;
         BCD_3 = 0;
     }
-    if (decimal == 5){
+    else if (decimal == 5){
         BCD_0 = 0;
         BCD_1 = 1;
         BCD_2 = 0;
         BCD_3 = 1;
     }
-    if (decimal == 6){
+    else if (decimal == 6){
         BCD_0 = 0;
         BCD_1 = 1;
         BCD_2 = 1;
         BCD_3 = 0;
     }
-    if (decimal == 7){
+    else if (decimal == 7){
         BCD_0 = 0;
         BCD_1 = 1;
         BCD_2 = 1;
         BCD_3 = 1;
     }
-    if (decimal == 8){
+    else if (decimal == 8){
         BCD_0 = 1;
         BCD_1 = 0;
         BCD_2 = 0;
         BCD_3 = 0;
     }
-    if (decimal == 9){
+    else if (decimal == 9){
         BCD_0 = 1;
         BCD_1 = 0;
         BCD_2 = 0;
@@ -193,3 +183,5 @@ void set_pins(unsigned char decimal){
 
 
 }
+
+//Se puede arreglar el problema definiendo el número nuevo siempre que el botón es 0, pero la asignación de los bits del BCD se hacen afuera de esto para que se mantengan con cada ciclo
