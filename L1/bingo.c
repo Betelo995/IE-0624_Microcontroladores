@@ -23,12 +23,14 @@ word __at 0x2007 __CONFIG = (_WDTE_OFF & _WDT_OFF & _MCLRE_OFF);
 //Declaracion de funciones
 unsigned char random_number_generator();
 void delay(unsigned int);
+void set_pins(unsigned char);
+
 
 void main(void){
     //Configuracion de los pines del microcontrolador
     TRISIO = 0b00001000; //Únicamente el pin 3 se toma como entrada
     ANSEL = 0; //Todas las entradas se dejan como digitales
-    _CMCON0 = 7; //Se apagan los comparadores
+    CMCON0 = 0x07; //Se apagan los comparadores
     GPIO = 0x00; //Inicializan todos los pines en 0 
 
     //Inicialización de variables necesarias para el algoritmo del programa.
@@ -70,144 +72,20 @@ void main(void){
                     ones = num % 10;
                 }
 
-                //Conversión a BCD para los displays MALLLL
-                if (tens == 0){
-                    BCD_0 = 0;
-                    BCD_1 = 0;
-                    BCD_2 = 0;
-                    BCD_3 = 0;
-                }
-                if (tens == 1){
-                    BCD_0 = 0;
-                    BCD_1 = 0;
-                    BCD_2 = 0;
-                    BCD_3 = 1;
-                }
-                if (tens == 2){
-                    BCD_0 = 0;
-                    BCD_1 = 0;
-                    BCD_2 = 1;
-                    BCD_3 = 0;
-                }
-                if (tens == 3){
-                    BCD_0 = 0;
-                    BCD_1 = 0;
-                    BCD_2 = 1;
-                    BCD_3 = 1;
-                }
-                if (tens == 4){
-                    BCD_0 = 0;
-                    BCD_1 = 1;
-                    BCD_2 = 0;
-                    BCD_3 = 0;
-                }
-                if (tens == 5){
-                    BCD_0 = 0;
-                    BCD_1 = 1;
-                    BCD_2 = 0;
-                    BCD_3 = 1;
-                }
-                if (tens == 6){
-                    BCD_0 = 0;
-                    BCD_1 = 1;
-                    BCD_2 = 1;
-                    BCD_3 = 0;
-                }
-                if (tens == 7){
-                    BCD_0 = 0;
-                    BCD_1 = 1;
-                    BCD_2 = 1;
-                    BCD_3 = 1;
-                }
-                if (tens == 8){
-                    BCD_0 = 1;
-                    BCD_1 = 0;
-                    BCD_2 = 0;
-                    BCD_3 = 0;
-                }
-                if (tens == 9){
-                    BCD_0 = 1;
-                    BCD_1 = 0;
-                    BCD_2 = 0;
-                    BCD_3 = 1;
-                }
-
+                //Poniendo los pines para las decenas
+                set_pins(tens);
 
                 //Delay the tiempo para cambiar al display de las unidades
                 delay(50);
 
                 DISP_NEG = ~DISP_NEG;
-                if (ones == 0){
-                    BCD_0 = 0;
-                    BCD_1 = 0;
-                    BCD_2 = 0;
-                    BCD_3 = 0;
-                }
-                if (ones == 1){
-                    BCD_0 = 0;
-                    BCD_1 = 0;
-                    BCD_2 = 0;
-                    BCD_3 = 1;
-                }
-                if (ones == 2){
-                    BCD_0 = 0;
-                    BCD_1 = 0;
-                    BCD_2 = 1;
-                    BCD_3 = 0;
-                }
-                if (ones == 3){
-                    BCD_0 = 0;
-                    BCD_1 = 0;
-                    BCD_2 = 1;
-                    BCD_3 = 1;
-                }
-                if (ones == 4){
-                    BCD_0 = 0;
-                    BCD_1 = 1;
-                    BCD_2 = 0;
-                    BCD_3 = 0;
-                }
-                if (ones == 5){
-                    BCD_0 = 0;
-                    BCD_1 = 1;
-                    BCD_2 = 0;
-                    BCD_3 = 1;
-                }
-                if (ones == 6){
-                    BCD_0 = 0;
-                    BCD_1 = 1;
-                    BCD_2 = 1;
-                    BCD_3 = 0;
-                }
-                if (ones == 7){
-                    BCD_0 = 0;
-                    BCD_1 = 1;
-                    BCD_2 = 1;
-                    BCD_3 = 1;
-                }
-                if (ones == 8){
-                    BCD_0 = 1;
-                    BCD_1 = 0;
-                    BCD_2 = 0;
-                    BCD_3 = 0;
-                }
-                if (ones == 9){
-                    BCD_0 = 1;
-                    BCD_1 = 0;
-                    BCD_2 = 0;
-                    BCD_3 = 1;
-                }
 
-                
-
+                set_pins(ones);
             }
 
             if (i == 16){
                 for (j = 0; j < 10; j++) {
-                    BCD_0 = 1;
-                    BCD_1 = 0;
-                    BCD_2 = 0;
-                    BCD_3 = 1;
+                    set_pins(9);
                     DISP_NEG = ~DISP_NEG;
                     delay(50);
                 }
@@ -249,4 +127,69 @@ void delay(unsigned int tiempo)
 
 	for(i=0;i<tiempo;i++)
 	  for(j=0;j<1275;j++);
+}
+
+void set_pins(unsigned char decimal){
+    if (decimal == 0){
+        BCD_0 = 0;
+        BCD_1 = 0;
+        BCD_2 = 0;
+        BCD_3 = 0;
+    }
+    if (decimal == 1){
+        BCD_0 = 0;
+        BCD_1 = 0;
+        BCD_2 = 0;
+        BCD_3 = 1;
+    }
+    if (decimal == 2){
+        BCD_0 = 0;
+        BCD_1 = 0;
+        BCD_2 = 1;
+        BCD_3 = 0;
+    }
+    if (decimal == 3){
+        BCD_0 = 0;
+        BCD_1 = 0;
+        BCD_2 = 1;
+        BCD_3 = 1;
+    }
+    if (decimal == 4){
+        BCD_0 = 0;
+        BCD_1 = 1;
+        BCD_2 = 0;
+        BCD_3 = 0;
+    }
+    if (decimal == 5){
+        BCD_0 = 0;
+        BCD_1 = 1;
+        BCD_2 = 0;
+        BCD_3 = 1;
+    }
+    if (decimal == 6){
+        BCD_0 = 0;
+        BCD_1 = 1;
+        BCD_2 = 1;
+        BCD_3 = 0;
+    }
+    if (decimal == 7){
+        BCD_0 = 0;
+        BCD_1 = 1;
+        BCD_2 = 1;
+        BCD_3 = 1;
+    }
+    if (decimal == 8){
+        BCD_0 = 1;
+        BCD_1 = 0;
+        BCD_2 = 0;
+        BCD_3 = 0;
+    }
+    if (decimal == 9){
+        BCD_0 = 1;
+        BCD_1 = 0;
+        BCD_2 = 0;
+        BCD_3 = 1;
+    }
+
+
 }
