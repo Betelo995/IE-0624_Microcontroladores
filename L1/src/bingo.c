@@ -6,10 +6,10 @@
 
 //Se definen los pines del microcontrolador
 #define BUTTON GP3
-#define BCD_0 GP0
-#define BCD_1 GP1
-#define BCD_2 GP2
-#define BCD_3 GP5
+#define BCD_0 GP5
+#define BCD_1 GP2
+#define BCD_2 GP1
+#define BCD_3 GP0
 #define DISP_NEG GP4
 
 
@@ -40,58 +40,79 @@ void main(void){
     unsigned char num;
     unsigned char tens = 0;
     unsigned char ones = 0;
+    int found;
     
 
     while (1){
-        if (BUTTON == 0){
-            do {
-                num = random_number_generator();
-            } while (num == 100);
+        //Poniendo los pines para las decenas
+        set_pins(tens);
+        
+        delay(10);
 
-            //Se revisa que no se repita el número
-            for (j = 0; j < i; j++) {
-                if (num == numbers[j]) {
-                    num = 100; //Marcar número como usado
-                    break;
+        //Delay the tiempo para cambiar al display de las unidades
+        DISP_NEG = ~DISP_NEG;
+        set_pins(ones);
+        
+        delay(10);
+        DISP_NEG = ~DISP_NEG;
+
+        bool not_repeated = true;
+
+        
+        if (BUTTON == 0){
+            /*
+                Vamos a hacer aqui el nuevo loop para checkear si el número está
+            
+            
+            */
+            while (not_repeated){
+                num = random_number_generator();
+                found = 0;
+                for(j = 0; j < i; j++){
+                    if(num == numbers[j]){
+                        found = 1;
+                    }
+                }
+                if (found != 1){
+                    not_repeated = false;
                 }
             }
-            //Almacenarlo En caso de no encontrarlo.
-            if (num != 100) {
-                numbers[i] = num;
-                i++; //Para llevar el conteo de los números sacados
 
-                //Si el número random es menor a cero entonces se establece decenas como 0 y unidad como número
-                if (num < 10) {
-                    tens = 0;
-                    ones = num;
-                } 
-                
-                //caso contrario se debe dividir el número por decenas y unidades
-                else{
-                    tens = num / 10;
-                    ones = num % 10;
-                }
+            numbers[i] = num;
+            i++;
+
+            //Si el número random es menor a diez entonces se establece decenas como 0 y unidad como número
+            if (num < 10) {
+                tens = 0;
+                ones = num;
+            } 
+            
+            //caso contrario se debe dividir el número por decenas y unidades
+            else{
+                tens = num / 10;
+                ones = num % 10;
             }
 
             if (i == 16){
-                for (j = 0; j < 10; j++) {
+                delay(300);
+                for (j = 0; j < 100; j++) {
                     set_pins(9);
                     DISP_NEG = ~DISP_NEG;
-                    delay(50);
+                    delay(15);
+                    DISP_NEG = ~DISP_NEG;
+                    delay(15);
+                    DISP_NEG = ~DISP_NEG;
+                    delay(15);
                 }
                 i = 0;
+                tens = 0;
+                ones = 0;
 
             }
         }
-        //Poniendo los pines para las decenas
-        set_pins(tens);
-
-        //Delay the tiempo para cambiar al display de las unidades
-        delay(10);
-
-        DISP_NEG = ~DISP_NEG;
-
-        set_pins(ones);
+    
+        
+        
     }
 
 }
@@ -112,11 +133,11 @@ unsigned char random_number_generator(){
 
 void delay(unsigned int tiempo)
 {
-	unsigned int i;
-	unsigned int j;
+	unsigned int a;
+	unsigned int b;
 
-	for(i=0;i<tiempo;i++)
-	  for(j=0;j<1275;j++);
+	for(a=0;a<tiempo;a++)
+	  for(b=0;b<1275;b++);
 }
 
 void set_pins(unsigned char decimal){
