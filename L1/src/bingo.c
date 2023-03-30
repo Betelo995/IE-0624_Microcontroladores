@@ -41,6 +41,7 @@ void main(void){
     unsigned char tens = 0;
     unsigned char ones = 0;
     int found;
+    bool not_repeated;
     
 
     while (1){
@@ -55,16 +56,12 @@ void main(void){
         
         delay(10);
         DISP_NEG = ~DISP_NEG;
+        not_repeated = true;
 
-        bool not_repeated = true;
 
         
         if (BUTTON == 0){
-            /*
-                Vamos a hacer aqui el nuevo loop para checkear si el número está
-            
-            
-            */
+
             while (not_repeated){
                 num = random_number_generator();
                 found = 0;
@@ -88,7 +85,7 @@ void main(void){
             } 
             
             //caso contrario se debe dividir el número por decenas y unidades
-            else{
+            else if(num > 10){
                 tens = num / 10;
                 ones = num % 10;
             }
@@ -205,4 +202,3 @@ void set_pins(unsigned char decimal){
 }
 
 //Se puede arreglar el problema definiendo el número nuevo siempre que el botón es 0, pero la asignación de los bits del BCD se hacen afuera de esto para que se mantengan con cada ciclo
-
