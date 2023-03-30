@@ -94,7 +94,6 @@ void main(void){
             }
 
             if (i == 16){
-                delay(300);
                 for (j = 0; j < 100; j++) {
                     set_pins(9);
                     DISP_NEG = ~DISP_NEG;
@@ -206,3 +205,4 @@ void set_pins(unsigned char decimal){
 }
 
 //Se puede arreglar el problema definiendo el número nuevo siempre que el botón es 0, pero la asignación de los bits del BCD se hacen afuera de esto para que se mantengan con cada ciclo
+
