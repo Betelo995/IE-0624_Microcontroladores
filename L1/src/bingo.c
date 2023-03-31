@@ -41,7 +41,7 @@ void main(void){
     unsigned char tens = 0;
     unsigned char ones = 0;
     int found;
-    bool not_repeated;
+    bool repeated;
     
 
     while (1){
@@ -56,13 +56,13 @@ void main(void){
         
         delay(10);
         DISP_NEG = ~DISP_NEG;
-        not_repeated = true;
+        repeated = true;
 
 
         
         if (BUTTON == 0){
 
-            while (not_repeated){
+            while (repeated){
                 num = random_number_generator();
                 found = 0;
                 for(j = 0; j < i; j++){
@@ -71,7 +71,7 @@ void main(void){
                     }
                 }
                 if (found != 1){
-                    not_repeated = false;
+                    repeated = false;
                 }
             }
 
@@ -200,5 +200,3 @@ void set_pins(unsigned char decimal){
 
 
 }
-
-//Se puede arreglar el problema definiendo el número nuevo siempre que el botón es 0, pero la asignación de los bits del BCD se hacen afuera de esto para que se mantengan con cada ciclo
